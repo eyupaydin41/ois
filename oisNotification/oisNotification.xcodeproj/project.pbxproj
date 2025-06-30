@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D00317D72E12C224000BC592 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = D00317D62E12C224000BC592 /* SwiftSoup */; };
 		D011BDE62E121B6000B5EC52 /* MSAL in Frameworks */ = {isa = PBXBuildFile; productRef = D011BDE52E121B6000B5EC52 /* MSAL */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +61,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D011BDE62E121B6000B5EC52 /* MSAL in Frameworks */,
+				D00317D72E12C224000BC592 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +121,7 @@
 			name = oisNotification;
 			packageProductDependencies = (
 				D011BDE52E121B6000B5EC52 /* MSAL */,
+				D00317D62E12C224000BC592 /* SwiftSoup */,
 			);
 			productName = oisNotification;
 			productReference = D011BDB82E121A9C00B5EC52 /* oisNotification.app */;
@@ -198,6 +201,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				D011BDE42E121B6000B5EC52 /* XCRemoteSwiftPackageReference "microsoft-authentication-library-for-objc" */,
+				D00317D52E12C224000BC592 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D011BDB92E121A9C00B5EC52 /* Products */;
@@ -558,6 +562,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D00317D52E12C224000BC592 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.8;
+			};
+		};
 		D011BDE42E121B6000B5EC52 /* XCRemoteSwiftPackageReference "microsoft-authentication-library-for-objc" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/AzureAD/microsoft-authentication-library-for-objc.git";
@@ -569,6 +581,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D00317D62E12C224000BC592 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D00317D52E12C224000BC592 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
 		D011BDE52E121B6000B5EC52 /* MSAL */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D011BDE42E121B6000B5EC52 /* XCRemoteSwiftPackageReference "microsoft-authentication-library-for-objc" */;

@@ -18,5 +18,11 @@
         <string>msauthv2</string>
         <string>msauthv3</string>
     </array>
+
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
 </dict>
 </plist>

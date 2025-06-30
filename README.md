@@ -1,61 +1,31 @@
-# Öğrenci Bilgi Sistemi (OIS)
+# Öğrenci Bilgi Sistemi (OIS) Mobil Uygulaması
 
-- Bu proje, Flask tabanlı bir backend API ve SwiftUI ile yazılmış bir iOS istemcisinden oluşur. 
-- Amaç: Öğrenci notlarını güvenli şekilde görüntülemek ve günlük şifre işlemlerini otomatikleştirmektir.
+Bu proje, SwiftUI ile yazılmış modern bir iOS uygulamasıdır. Amaç, İstanbul Sağlık ve Teknoloji Üniversitesi OIS (Öğrenci Bilgi Sistemi) üzerinden öğrenci notlarını ve sınav sonuçlarını güvenli şekilde mobilde görüntülemek ve günlük şifre işlemlerini otomatikleştirmektir.
 
 ---
 
-## İçerik
-
-- [Kurulum ve Çalıştırma](#kurulum-ve-çalıştırma)
-- [Backend (Flask API)](#backend-flask-api)
-- [iOS Uygulaması (SwiftUI)](#ios-uygulaması-swiftui)
-- [MSAL/Azure ve Redirect URI Ayarları](#msalazure-ve-redirect-uri-ayarları)
-- [Sık Karşılaşılan Sorunlar](#sık-karşılaşılan-sorunlar)
-- [Katkı ve Lisans](#katkı-ve-lisans)
+## Özellikler
+- OIS web arayüzüne doğrudan istek atarak notlarınızı ve sınav sonuçlarınızı otomatik çeker.
+- Günlük şifreyi okul mailinizden otomatik olarak bulur (MSAL/Azure kimlik doğrulama ile).
+- Notlar, ders başlıkları ve sınav detayları modern ve kaydırılabilir bir tablo olarak gösterilir.
+- HTML parse işlemi SwiftSoup ile yapılır.
+- Açıklanma tarihi, etki oranı, tür ve puan gibi tüm detaylar ekranda sunulur.
 
 ---
 
 ## Kurulum ve Çalıştırma
 
-### 1. Backend (Flask API)
-
-#### Gereksinimler
-- Python 3.8+
-- pip
-
-#### Kurulum
-
-```sh
-cd flask_api
-pip install -r requirements.txt
-```
-
-#### Çalıştırma
-
-```sh
-python3 app.py --host=0.0.0.0 --port=5001
-```
-
-> **Not:**  
-> Bilgisayarınızın IP adresini öğrenmek için terminalde `ipconfig getifaddr en0` (Mac) veya `ipconfig` (Windows) komutunu kullanabilirsiniz.
-
----
-
-### 2. iOS Uygulaması (SwiftUI)
-
-#### Gereksinimler
+### Gereksinimler
 - Xcode 14+
 - Gerçek bir iOS cihaz veya simülatör
 
-#### Kurulum ve Çalıştırma
-
-1. Proje klasörünü açın:  
-   `ois/ois.xcodeproj` dosyasını Xcode ile açın.
-2. `ContentView.swift` dosyasındaki aşağıdaki değişkenleri kendi ortamınıza göre güncelleyin:
+### Kurulum ve Çalıştırma
+1. Proje klasörünü açın: `oisNotification/oisNotification.xcodeproj` dosyasını Xcode ile açın.
+2. `ContentView.swift` dosyasındaki aşağıdaki alanları kendi ortamınıza göre güncelleyin:
     ```swift
-    private let backendURL = "http://<bilgisayar-ip-adresi>:5001"
-    private let kRedirectUri = "msauth.eyupaydin.oisNotification://auth"
+    let kRedirectUri = "msauth.eyupaydin.oisNotification://auth"
+    let clientId = "<Azure Client ID>"
+    let authorityUrl = "https://login.microsoftonline.com/<Tenant ID>"
     ```
 3. iPhone veya simülatör seçin ve çalıştırın.
 
@@ -63,56 +33,36 @@ python3 app.py --host=0.0.0.0 --port=5001
 
 ## MSAL/Azure ve Redirect URI Ayarları
 
-Uygulama Microsoft kimlik doğrulaması (MSAL) kullanmaktadır.  
-Kendi Azure hesabınızda kullanmak için aşağıdaki adımları uygulayın:
+Uygulama Microsoft kimlik doğrulaması (MSAL) ile okul mailinden günlük şifreyi otomatik çeker. Kendi Azure hesabınızda kullanmak için:
 
-### 1. Azure Portal’da Uygulama Kaydı Oluşturun
+1. Azure Portal’da uygulama kaydı oluşturun.
+2. **Redirect URI** olarak: `msauth.eyupaydin.oisNotification://auth` (veya kendi URI’nızı) ekleyin.
+3. Client ID ve Tenant ID’yi alın, `ContentView.swift` içinde güncelleyin.
+4. info.plist > URL Types’a redirect URI scheme’ini ekleyin.
+5. Azure’da uygulamanıza “Microsoft Graph” için `Mail.Read` izni verin.
 
-- Azure Portal’a girin: https://portal.azure.com/
-- Azure Active Directory > App registrations > New registration
-- Bir isim verin.
-- **Redirect URI** olarak:  
-  `msauth.eyupaydin.oisNotification://auth`  
-  (veya kendi URI’nızı belirleyin)
+---
 
-### 2. Client ID ve Authority Bilgilerini Alın
+## Notlar ve HTML Parse
 
-- Kayıt sonrası “Application (client) ID” ve “Directory (tenant) ID”’yi not alın.
-- `ContentView.swift` dosyasında aşağıdaki alanları güncelleyin:
-    ```swift
-    let clientId = "<Sizin Client ID'niz>"
-    let authority = try! MSALAuthority(url: URL(string: "https://login.microsoftonline.com/<Sizin Tenant ID'niz>")!)
-    ```
-
-### 3. info.plist Ayarı
-
-- Xcode’da `info.plist` dosyasını açın.
-- “URL Types” bölümüne yeni bir item ekleyin.
-- “URL Schemes” kısmına redirect URI’nızın başındaki scheme’i (ör: `msauth.eyupaydin.oisNotification`) ekleyin.
-
-### 4. Gerekli API İzinleri
-
-- Azure Portal’da uygulamanıza “Microsoft Graph” için gerekli izinleri (ör: `Mail.Read`) ekleyin.
+- Uygulama, OIS web arayüzünden notları ve sınav sonuçlarını otomatik olarak çeker ve HTML’yi SwiftSoup ile parse eder.
+- Notlar, ders başlıkları ve sınav detayları ekranda modern ve kaydırılabilir bir tablo olarak gösterilir.
+- HTML parse işlemi, Python’daki BeautifulSoup mantığına benzer şekilde Swift’te uygulanmıştır.
+- Açıklanma tarihi, etki oranı, tür ve puan gibi tüm detaylar ekranda yatay kaydırılabilir şekilde sunulur.
 
 ---
 
 ## Sık Karşılaşılan Sorunlar
 
-- **iOS cihazdan backend’e erişemiyorum:**  
-  - Bilgisayar ve iPhone aynı Wi-Fi’da olmalı.
-  - Backend’i `--host=0.0.0.0` ile başlatmalısınız.
-  - Firewall veya ağ kısıtlamalarını kontrol edin.
-- **Not Found hatası:**  
-  - Doğru endpoint’e istek attığınızdan emin olun (ör: `/api/login`).
-- **MSAL ile girişte hata:**  
+- **MSAL ile girişte hata:**
   - Redirect URI ve info.plist ayarlarını kontrol edin.
   - Azure’da gerekli izinlerin tanımlı olduğundan emin olun.
+
 
 ---
 
 ## Katkı ve Lisans
 
-Katkıda bulunmak için pull request gönderebilirsiniz.  
-Lisans: MIT
+Katkıda bulunmak için pull request gönderebilirsiniz. Lisans: MIT
 
 ---
